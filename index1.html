@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVD Logo Screensaver with Rotation and Movement</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            transition: 1s;
+        }
+
+        #dvd-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .dvd-logo {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-size: cover;
+            transform-origin: center center;
+        }
+    </style>
+</head>
+<body>
+    <div id="dvd-container"></div>
+    
+    <script>
+        //background color
+        var body = document.querySelector('body');
+
+        setInterval(changeColor, 1000)
+
+        function changeColor() {
+            var red = Math.floor(Math.random() * 255);
+            var green = Math.floor(Math.random() * 255);
+            var blue = Math.floor(Math.random() * 255);
+
+            body.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+        }
+
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        //animation
+        const logos = [];
+
+        
+        const imageOptions = [
+            "",
+            "holostar-removebg-preview.png",
+            "silverstar-removebg-preview.png",
+            "cyberstar-removebg-preview.png",
+            "bubblestar-removebg-preview.png",
+            "star-removebg-preview.png",
+            "purplestar-removebg-preview.png",
+            "cute3dstar.png",
+            "cutepinkstar.png",
+            "cutebluestar.png",
+            "cutetealstar.png",
+            "cutelilacstar.png",
+            "cutelightgreenstar.png",
+            "chromestar.png",
+            "silverhollowstar-removebg-preview.png",
+            "y2kstar.png",
+            "mariostar-removebg-preview.png"
+        ];
+
+        
+        const numLogos = 150;
+
+        
+        for (let i = 0; i < numLogos; i++) {
+            createLogo();
+        }
+
+        
+        function createLogo() {
+           
+            const dvdLogo = document.createElement('div');
+            dvdLogo.className = 'dvd-logo';
+            dvdLogo.style.left = Math.random() * (screenWidth - 100) + 'px';
+            dvdLogo.style.top = Math.random() * (screenHeight - 50) + 'px';
+            dvdLogo.style.backgroundImage = `url(${imageOptions[Math.floor(Math.random() * imageOptions.length)]})`;
+            dvdLogo.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+            document.getElementById('dvd-container').appendChild(dvdLogo);
+
+            
+            logos.push({
+                element: dvdLogo,
+                dx: (Math.random() - 0.5) * 20, 
+                dy: (Math.random() - 0.5) * 20 
+            });
+        }
+
+        
+        function animateDVDLogos() {
+            
+            logos.forEach((logo) => {
+                
+                let x = parseFloat(logo.element.style.left) + logo.dx;
+                let y = parseFloat(logo.element.style.top) + logo.dy;
+
+               
+                if (x + logo.element.offsetWidth >= screenWidth || x <= 0) {
+                    logo.dx = -logo.dx;
+                }
+                if (y + logo.element.offsetHeight >= screenHeight || y <= 0) {
+                    logo.dy = -logo.dy;
+                }
+
+                
+                logo.element.style.left = x + 'px';
+                logo.element.style.top = y + 'px';
+
+                logo.element.style.transform = 'rotate(' + getRotation(logo.element) + 'deg)';
+            });
+
+            
+            requestAnimationFrame(animateDVDLogos);
+        }
+
+        
+        function getRotation(logo) {
+            const currentRotation = logo.style.transform ? parseFloat(logo.style.transform.replace('rotate(', '').replace('deg)', '')) : 0;
+            return currentRotation + 3;
+        }
+
+        animateDVDLogos();
+    </script>
+</body>
+</html>
