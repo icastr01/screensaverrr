@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVD Logo Screensaver with Spline</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            transition: 1s
+        }
+
+        #dvd-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .dvd-logo {
+            position: absolute;
+            width: 100px;
+            height: 50px;
+            /* background-image: url('star-pfp.gif'); */
+            background-size: cover;
+        }
+
+        #spline-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .message img {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dvd-container">
+        <div style="font-size: 5vw;" class="message" onclick="pickColor(this)">
+            <span id="random-color">starfall</span>
+        </div>
+    </div>
+
+    <script>
+        //background color
+        var body = document.querySelector('body');
+
+        setInterval(changeColor, 1000)
+
+        function changeColor() {
+            var red = Math.floor(Math.random() * 255);
+            var green = Math.floor(Math.random() * 255);
+            var blue = Math.floor(Math.random() * 255);
+
+            body.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+        }
+
+        var message = document.querySelector('.message');
+        var messageOptions = [];
+
+
+        var imageOptions = [
+            "star-pfp.gif",
+            "holostar.png",
+            "silverstar.png",
+            "cyberstar.png",
+            "bubblestar.png",
+            "star.jpeg",
+        ];
+
+        // Define an array to store information about each logo
+        const logos = [];
+
+        // Number of logos you want to display
+        const numLogos = 20;
+
+        // Create and initialize each logo
+        for (let i = 0; i < numLogos; i++) {
+            createLogo();
+        }
+
+        // Function to create a new logo and add it to the logos array
+        function createLogo() {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            // Create a new logo element
+            const dvdLogo = document.createElement('div');
+            dvdLogo.className = 'dvd-logo';
+            dvdLogo.style.backgroundImage = `url("${imageOptions[Math.floor(Math.random() * imageOptions.length)]}")`;
+            document.getElementById('dvd-container').appendChild(dvdLogo);
+
+            // Set initial position and speed
+            let x = Math.random() * (screenWidth - dvdLogo.offsetWidth);
+            let y = Math.random() * (screenHeight - dvdLogo.offsetHeight);
+            let dx = (Math.random() - 0.5) * 10; // Random horizontal speed
+            let dy = (Math.random() - 0.5) * 10; // Random vertical speed
+
+            // Store information about the logo in the logos array
+            logos.push({ element: dvdLogo, x, y, dx, dy });
+        }
+
+        // Function to animate all logos
+        function animateDVDLogos() {
+            // Loop through each logo in the logos array
+            logos.forEach((logo) => {
+                // Update position
+                logo.x += logo.dx;
+                logo.y += logo.dy;
+
+                // Check for collision with screen edges
+                if (logo.x + logo.element.offsetWidth >= window.innerWidth || logo.x <= 0) {
+                    logo.dx = -logo.dx;
+                }
+                if (logo.y + logo.element.offsetHeight >= window.innerHeight || logo.y <= 0) {
+                    logo.dy = -logo.dy;
+                }
+
+                // Update logo position
+                logo.element.style.left = logo.x + 'px';
+                logo.element.style.top = logo.y + 'px';
+            });
+
+            // Request animation frame for next frame
+            requestAnimationFrame(animateDVDLogos);
+        }
+
+        // Start the animation loop
+        animateDVDLogos();
+    </script>
+</body>
+
+</html>
